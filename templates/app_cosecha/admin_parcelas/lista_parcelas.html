@@ -1,0 +1,44 @@
+{% extends "app_cosecha/base_admin.html" %}
+
+{% block title %}Gestión de Parcelas{% endblock %}
+
+{% block content %}
+    <h3 class="mb-4">Gestión de Parcelas (RF-5.1)</h3>
+    <a href="{% url 'crear_parcela' %}" class="btn btn-success mb-3">
+        + Añadir Nueva Parcela
+    </a>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Ubicación</th>
+                        <th>Hectáreas</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for parcela in parcelas %}
+                    <tr>
+                        <td>{{ parcela.id_parcela }}</td>
+                        <td>{{ parcela.nombre }}</td>
+                        <td>{{ parcela.ubicacion }}</td>
+                        <td>{{ parcela.hectareas }}</td>
+                        <td>
+                            <a href="{% url 'editar_parcela' parcela.id_parcela %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'borrar_parcela' parcela.id_parcela %}" class="btn btn-sm btn-danger">Borrar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No hay parcelas registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

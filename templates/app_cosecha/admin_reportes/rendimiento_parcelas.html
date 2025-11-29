@@ -1,0 +1,79 @@
+{% extends "app_cosecha/base_admin.html" %}
+
+{% block title %}Rendimiento de Parcelas{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Rendimiento por Parcela</h1>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Comparativa de Producción Total</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="graficaParcelas" width="400" height="150"></canvas>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Detalle Diario</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Parcela</th>
+                        <th>Total Cajas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in rendimientos %}
+                    <tr>
+                        <td>{{ registro.fecha_hora__date|date:"d M Y" }}</td>
+                        <td>{{ registro.parcela__nombre }}</td>
+                        <td>{{ registro.total_cajas }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">No hay datos.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{ nombres_parcelas|json_script:"datos-nombres" }}
+    {{ totales_cosecha|json_script:"datos-totales" }}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Leemos los datos de los scripts ocultos
+        const etiquetas = JSON.parse(document.getElementById('datos-nombres').textContent);
+        const datos = JSON.parse(document.getElementById('datos-totales').textContent);
+
+        // Dibujamos la gráfica
+        const ctx = document.getElementById('graficaParcelas').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: etiquetas,
+                datasets: [{
+                    label: 'Cajas Totales Cosechadas',
+                    data: datos,
+                    backgroundColor: 'rgba(13, 110, 253, 0.6)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+{% endblock %}

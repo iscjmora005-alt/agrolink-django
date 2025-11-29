@@ -126,3 +126,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# (Asegúrate de que 'import os' esté al inicio del archivo settings.py)
+
+STATIC_URL = 'static/'
+
+# Directorio donde Django buscará tus archivos CSS, JS, e imágenes
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
